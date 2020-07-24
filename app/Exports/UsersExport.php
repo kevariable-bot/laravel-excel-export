@@ -3,15 +3,30 @@
 namespace App\Exports;
 
 use App\User;
+use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
+use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
-class UsersExport implements FromQuery, WithMapping, WithHeadings, WithColumnFormatting
+class UsersExport implements FromQuery, WithMapping, WithHeadings, WithColumnFormatting, WithMultipleSheets
 {
+    use Exportable;
+
+    public function sheets(): array
+    {
+        $sheets = [];
+
+        for ($month = 1; $month <= 3; $month++) {
+            $sheets[] = new UsersPerMonthSheet();
+        }
+
+        return $sheets;
+    }
+
     public function query()
     {
         return User::where('id', '>', 25);
