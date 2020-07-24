@@ -3,17 +3,35 @@
 namespace App\Exports;
 
 use App\User;
-use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\FromQuery;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithMapping;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
 
-// use Maatwebsite\Excel\Concerns\FromCollection;
-
-class UsersExport implements FromCollection
+class UsersExport implements FromQuery, WithMapping, WithHeadings
 {
-    /**
-     * @return \Illuminate\Support\Collection
-     */
-    public function collection()
+    public function query()
     {
-        return User::select('id', 'name')->where('id', '>', 25)->get();
+        return User::where('id', '>', 25);
+    }
+
+    public function map($user): array
+    {
+        return [
+            'ini id ke - ' . $user->id,
+            $user->name,
+            $user->email,
+            Date::dateTimeToExcel($user->created_at)
+        ];
+    }
+
+    public function headings(): array
+    {
+        return [
+            '#',
+            'Name',
+            'Email',
+            'Time'
+        ];
     }
 }
