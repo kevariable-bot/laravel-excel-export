@@ -9,6 +9,8 @@ class UserController extends Controller
 {
     public function __invoke()
     {
-        return Excel::download(new UsersExport, 'users.xlsx');
+        Excel::store(new UsersExport, 'users.xlsx');
+
+        return 'tersimpan';
     }
 }
