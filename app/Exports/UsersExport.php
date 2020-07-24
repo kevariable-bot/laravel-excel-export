@@ -4,11 +4,13 @@ namespace App\Exports;
 
 use App\User;
 use Maatwebsite\Excel\Concerns\FromQuery;
+use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
-class UsersExport implements FromQuery, WithMapping, WithHeadings
+class UsersExport implements FromQuery, WithMapping, WithHeadings, WithColumnFormatting
 {
     public function query()
     {
@@ -32,6 +34,13 @@ class UsersExport implements FromQuery, WithMapping, WithHeadings
             'Name',
             'Email',
             'Time'
+        ];
+    }
+
+    public function columnFormats(): array
+    {
+        return [
+            'D' => NumberFormat::FORMAT_DATE_DDMMYYYY
         ];
     }
 }
